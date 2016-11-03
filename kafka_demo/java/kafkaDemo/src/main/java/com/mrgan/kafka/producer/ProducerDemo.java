@@ -21,7 +21,7 @@ public class ProducerDemo {
 
 		Map<String, Object> props = new HashMap<String, Object>();
 		props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
-				"10.0.60.146:9092,10.0.60.147:9092,10.0.60.148:9092");
+				"192.168.222.110:9092,192.168.222.110:9093,192.168.222.110:9094");
 		props.put(ProducerConfig.ACKS_CONFIG, "all");
 		props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG,
 				"com.mrgan.kafka.partitioner.RandomPartitioner");
@@ -40,7 +40,7 @@ public class ProducerDemo {
 			String ip = "key" + runtime;
 			String msg = runtime + ",www.example.com," + ip;
 			ProducerRecord<String, String> data = new ProducerRecord<String, String>(
-					"class31", ip, msg);
+					"test", ip, msg);
 			Future<RecordMetadata> future = producer.send(data);
 			try {
 				System.out.println(future.get().toString());
