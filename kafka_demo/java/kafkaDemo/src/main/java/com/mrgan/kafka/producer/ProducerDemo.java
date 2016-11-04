@@ -40,7 +40,7 @@ public class ProducerDemo {
 			String ip = "key" + runtime;
 			String msg = runtime + ",www.example.com," + ip;
 			ProducerRecord<String, String> data = new ProducerRecord<String, String>(
-					"test", ip, msg);
+					"kps", ip, msg);
 			Future<RecordMetadata> future = producer.send(data);
 			try {
 				System.out.println(future.get().toString());

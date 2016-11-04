@@ -4,8 +4,6 @@ import com.mrgan.zookeeper.leader.LeaderElection;
 import com.mrgan.zookeeper.leader.LeaderElectionCallback;
 
 public class AsyncDemo {
-	private static String _ROOT_PATH = "/ephemeral_sequential";
-
 	public static void main(String[] args) throws Exception {
 		LeaderElection le = new LeaderElection();
 		boolean flag = le.getLeaderShip(new LeaderElectionCallback() {

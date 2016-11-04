@@ -28,7 +28,7 @@ public class ConsumerGroupExample {
 		// 10.0.60.146:9092,10.0.60.147:9092,10.0.60.148:9092
 		// 10.0.60.146:2181,10.0.60.147:2181,10.0.60.148:2181
 		props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-				"10.0.60.146:9092,10.0.60.147:9092,10.0.60.148:9092");
+				"192.168.222.110:9092,192.168.222.110:9093,192.168.222.110:9094");
 		props.put(ConsumerConfig.GROUP_ID_CONFIG, "1");
 		props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
 		props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
@@ -65,7 +65,7 @@ public class ConsumerGroupExample {
 		//
 		// executor = Executors.newFixedThreadPool(a_numThreads);
 		List<String> topics = new ArrayList<String>();
-		topics.add("class31");
+		topics.add("kps");
 		consumer.subscribe(topics);
 		while (true) {
 			ConsumerRecords<String, String> record = consumer.poll(60000);
