@@ -9,6 +9,7 @@ import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomi
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 
 import com.mrgan.springboot.config.ConnectionSettings;
 
@@ -39,6 +40,12 @@ public class Application implements EmbeddedServletContainerCustomizer {
 	public ConnectionSettings connectionSettings() {
 		return new ConnectionSettings();
 
+	}
+
+	@Bean
+	// 这方法不加也行
+	public MethodValidationPostProcessor methodValidationPostProcessor() {
+		return new MethodValidationPostProcessor();
 	}
 
 	public static void main(String[] args) {
