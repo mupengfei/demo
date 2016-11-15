@@ -10,7 +10,7 @@ public class PageController {
 	@RequestMapping("/hello")
 	public ModelAndView hello(ModelAndView model) {
 		model.setViewName("HelloThymeleaf");
-		model.addObject("message", "Hello");
+		model.addObject("message", "Hello1");
 		return model;
 	}
 }

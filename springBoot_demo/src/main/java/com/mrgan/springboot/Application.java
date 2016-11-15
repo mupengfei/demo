@@ -11,6 +11,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
 import com.mrgan.springboot.config.ConnectionSettings;
 
 @SpringBootApplication
@@ -31,9 +37,18 @@ import com.mrgan.springboot.config.ConnectionSettings;
  * @ComponentScan tells Spring to look for other components, configurations, and
  * services in the the hello package, allowing it to find the HelloController.
  */
+@EnableSwagger2 //swagger2
 public class Application implements EmbeddedServletContainerCustomizer {
 	private static Logger logger = LogManager.getLogger(Application.class
 			.getName());
+
+	@Bean
+	public Docket api() {
+		return new Docket(DocumentationType.SWAGGER_2).select() // 选择那些路径和api会生成document
+				.apis(RequestHandlerSelectors.any()) // 对所有api进行监控
+				.paths(PathSelectors.any()) // 对所有路径进行监控
+				.build();
+	}
 
 	@Bean
 	@ConfigurationProperties(prefix = "connection")
