@@ -2,6 +2,11 @@ package com.mrgan.springboot;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.thrift.TProcessor;
+import org.apache.thrift.server.TServer;
+import org.apache.thrift.server.TThreadPoolServer;
+import org.apache.thrift.transport.TServerSocket;
+import org.apache.thrift.transport.TServerTransport;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
@@ -18,6 +23,8 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import com.mrgan.springboot.config.ConnectionSettings;
+import com.mrgan.springboot.thrift.Calculator;
+import com.mrgan.springboot.thrift.CalculatorHandler;
 
 @SpringBootApplication
 /*
@@ -37,7 +44,8 @@ import com.mrgan.springboot.config.ConnectionSettings;
  * @ComponentScan tells Spring to look for other components, configurations, and
  * services in the the hello package, allowing it to find the HelloController.
  */
-@EnableSwagger2 //swagger2
+@EnableSwagger2
+// swagger2
 public class Application implements EmbeddedServletContainerCustomizer {
 	private static Logger logger = LogManager.getLogger(Application.class
 			.getName());
@@ -76,6 +84,7 @@ public class Application implements EmbeddedServletContainerCustomizer {
 		// for (String beanName : beanNames) {
 		// System.out.println(beanName);
 		// }
+		initServer();
 	}
 
 	public void customize(ConfigurableEmbeddedServletContainer container) {
@@ -87,5 +96,26 @@ public class Application implements EmbeddedServletContainerCustomizer {
 		 */
 		// container.addErrorPages(new ErrorPage(HttpStatus.BAD_REQUEST,
 		// "/screen/error")); //配置error页面
+	}
+
+	private static void initServer() {
+		try {
+			Calculator.Iface serviceInterface = new CalculatorHandler();
+
+			// Create the processor
+			TProcessor processor = new Calculator.Processor<>(serviceInterface);
+			TServerTransport serverTransport = new TServerSocket(9090);
+			// TServer server = new TSimpleServer(
+			// new Args(serverTransport).processor(processor));
+
+			// Use this for a multithreaded server
+			TServer server = new TThreadPoolServer(new TThreadPoolServer.Args(
+					serverTransport).processor(processor));
+
+			System.out.println("Starting the simple server...");
+			server.serve();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

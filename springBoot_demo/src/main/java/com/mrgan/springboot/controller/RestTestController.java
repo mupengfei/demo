@@ -5,6 +5,8 @@ import java.util.Date;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
@@ -14,12 +16,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mrgan.springboot.Application;
 import com.mrgan.springboot.model.Customer;
 import com.mrgan.springboot.model.User;
 
 @RestController
 @RequestMapping("/rest")
 public class RestTestController {
+	private static Logger logger = LogManager.getLogger(RestTestController.class
+			.getName());
+	
 	@RequestMapping(value = { "/date/{date}" })
 	public Customer dateTest(
 			@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
@@ -30,6 +36,7 @@ public class RestTestController {
 	public String check(
 			@Valid @Min(value = 0, message = "num必须大于等于0") @RequestParam Integer num) {
 		// System.out.println(error.getErrorCount());
+		logger.info("Hello world 你好 hhh " + System.currentTimeMillis());
 		return num + "";
 	}
 
