@@ -1,0 +1,44 @@
+2、主流的三大框架：Struts、Hibernate/Mybatis、Spring MVC和ActiveMQ技术；
+3、前端：JSP、FreeMarker、Js、JQuery、Ajax、sea.js；
+4、熟练任意数据库：Oracle、MySql 、SQL Service数据库原理、设计及SQL优化；
+5、熟练使用：Ehcache、Memcache、Redis缓存技术；
+6、熟练Linux命令及shell脚本；
+7、对分布式架构、缓存、SESSION有一定理解；
+8、熟练使用Web Service 、Hessian技术；
+9、熟练：Nginx 、Apache、Jetty；
+
+
+
+
+
+
+Hibernate/Mybatis、Spring MVC
+Ehcache、Memcache、Redis
+对分布式架构、缓存、SESSION有一定理解
+Hessian
+
+
+
+elk
+storm
+hdfs
+设计模式
+springmvc
+ehcache
+redis
+kafka   hessian
+分布式框架
+mongodb
+jackson
+jmx
+
+
+
+日志
+restful
+mongoDB
+jackson
+kafka前置
+
+
+
