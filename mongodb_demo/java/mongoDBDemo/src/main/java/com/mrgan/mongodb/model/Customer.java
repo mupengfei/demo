@@ -5,7 +5,10 @@ import java.util.Date;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import lombok.Data;
+
 @Document(collection = "customertest")
+@Data
 public class Customer {
 
 	@Id
@@ -24,33 +27,7 @@ public class Customer {
 
 	@Override
 	public String toString() {
-		return String.format(
-				"Customer[ firstName='%s', lastName='%s', dateName='%s']",
-				firstName, lastName, dateName);
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public Date getDateName() {
-		return dateName;
-	}
-
-	public void setDateName(Date dateName) {
-		this.dateName = dateName;
+		return String.format("Customer[ firstName='%s', lastName='%s', dateName='%s']", firstName, lastName, dateName);
 	}
 
 }

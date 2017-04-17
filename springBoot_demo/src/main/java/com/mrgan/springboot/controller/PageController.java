@@ -9,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class PageController {
 	@RequestMapping("/hello")
 	public ModelAndView hello(ModelAndView model) {
+		System.out.println("hello");
 		model.setViewName("HelloThymeleaf");
 		model.addObject("message", "Hello1");
 		return model;

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8" />
+
+<title>Demo Chat</title>
+
+<link href="bootstrap.css" rel="stylesheet">
+
+<style>
+body {
+	padding: 20px;
+}
+
+#console {
+	height: 400px;
+	overflow: auto;
+}
+
+.username-msg {
+	color: orange;
+}
+
+.connect-msg {
+	color: green;
+}
+
+.disconnect-msg {
+	color: red;
+}
+
+.send-msg {
+	color: #888
+}
+</style>
+
+
+<script src="js/socket.io/socket.io.js"></script>
+<script src="js/moment.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
+<script>
+	var clientid = '1';
+
+	var socket = io.connect('http://172.27.6.72:2048/live?room=' + clientid);
+
+	socket.on('connect', function() {
+	});
+
+	socket.on('message', function(data) {
+	});
+
+	socket.on('disconnect', function() {
+	});
+
+	function sendMessage() {
+		var message = $('#msg').val();
+		if (message == '')
+			return;
+		$('#msg').val('');
+		$.ajax({
+			type : 'POST',
+			url : "/im/send/1",
+			data : {
+				'msg' : message
+			},
+			async : false
+		});
+		//socket.emit('messageevent', message);
+	}
+
+	function initialize() {
+		console.log("Initializing; room=${roomKey}.");
+		localVideo = document.getElementById("localVideo");
+		remoteVideo = document.getElementById("remoteVideo");
+		getUserMedia();
+	}
+
+	function getUserMedia() {
+		navigator.getUserMedia
+				|| (navigator.getUserMedia = navigator.mozGetUserMedia
+						|| navigator.webkitGetUserMedia
+						|| navigator.msGetUserMedia);
+		navigator.getUserMedia({
+			'audio' : true,
+			'video' : true
+		}, onUserMediaSuccess, onUserMediaError);
+	}
+
+	function onUserMediaError(stream) {
+		console.log("onUserMediaError.");
+	}
+
+	function onUserMediaSuccess(stream) {
+		console.log("User has granted access to local media.");
+		if (window.URL) {
+			localVideo.src = window.URL.createObjectURL(stream);
+		} else if (window.webkitURL) {
+			localVideo.src = window.webkitURL.createObjectURL(stream);
+		} else {
+			localVideo.src = stream;
+		}
+		localVideo.style.opacity = 1;
+		//localVideo.src = url;
+		console.log(localVideo.src);
+		localStream = stream;
+		localVideo.autoplay = true;
+		// Caller creates PeerConnection.  
+		maybeStart();
+	}
+
+	function maybeStart() {
+		console.log("Creating PeerConnection.");
+		var PeerConnection = window.RTCPeerConnection
+				|| window.mozRTCPeerConnection
+				|| window.webkitRTCPeerConnection;
+		if (window.RTCPeerConnection) {
+			pc = new window.RTCPeerConnection(null);
+		} else if (window.mozRTCPeerConnection) {
+			pc = new window.mozRTCPeerConnection(null);
+		} else if (window.webkitRTCPeerConnection) {
+			pc = new window.webkitRTCPeerConnection(null);
+		}
+		console.log("Adding local stream.");
+		pc.addStream(localStream);
+		// Caller initiates offer to peer.  
+		doCall();
+	}
+
+	function doCall() {
+		console.log("Sending offer to peer.");
+		isRTCPeerConnection = true;
+		if (isRTCPeerConnection) {
+			//pc.createOffer(setLocalAndSendMessage, null, null);
+			var offer = pc.createOffer(setLocalAndSendMessage, function(error) {
+				console.log('Failure callback: ' + error);
+			});
+		} else {
+			//var offer = pc.createOffer(null);
+			//pc.setLocalDescription(pc.SDP_OFFER, offer);
+			//sendMessage({
+			//	type : 'offer',
+			//	sdp : offer.toSdp()
+			//});
+			//pc.startIce();
+		}
+	}
+
+	function setLocalAndSendMessage(sessionDescription) {
+		pc.setLocalDescription(sessionDescription);
+		//sendMessage(sessionDescription);
+		socket.emit("message", sessionDescription);
+	}
+
+	function sendMessage(message) {
+		//var msgString = JSON.stringify(message);
+		//console.log('发出信息 : ' + msgString);
+		//path = 'message?r=${roomKey}' + '&u=${user}';
+		//var xhr = new XMLHttpRequest();
+		//xhr.open('POST', path, true);
+		//xhr.send(msgString);
+		initialize();
+	}
+
+	function processSignalingMessage(message) {
+		var msg = JSON.parse(message);
+		if (msg.type === 'offer') {
+			// Callee creates PeerConnection  
+			if (!initiator && !started)
+				maybeStart();
+
+			// We only know JSEP version after createPeerConnection().  
+			if (isRTCPeerConnection)
+				pc.setRemoteDescription(new RTCSessionDescription(msg));
+			else
+				pc.setRemoteDescription(pc.SDP_OFFER, new SessionDescription(
+						msg.sdp));
+
+			doAnswer();
+		} else if (msg.type === 'answer' && started) {
+			pc.setRemoteDescription(new RTCSessionDescription(msg));
+		} else if (msg.type === 'candidate' && started) {
+			var candidate = new RTCIceCandidate({
+				sdpMLineIndex : msg.label,
+				candidate : msg.candidate
+			});
+			pc.addIceCandidate(candidate);
+		} else if (msg.type === 'bye' && started) {
+			onRemoteHangup();
+		}
+	}
+</script>
+</head>
+
+<body>
+
+	<h1>Netty-socketio Demo Chat</h1>
+
+	<br />
+
+	<div id="console" class="well">
+		Local: <br>
+		<video id="localVideo" autoplay></video>
+		<br> Remote: <br>
+		<video id="remoteVideo" autoplay></video>
+	</div>
+
+	<form class="well form-inline" onsubmit="return false;">
+		<input id="msg" class="input-xlarge" type="text"
+			placeholder="Type something..." />
+		<button type="button" onClick="sendMessage()" class="btn" id="send">Send</button>
+		<button type="button" onClick="sendDisconnect()" class="btn">Disconnect</button>
+	</form>
+
+
+
+</body>

@@ -1,5 +1,8 @@
 package com.mrgan.springboot;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.thrift.TProcessor;
@@ -15,12 +18,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
-
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.mrgan.springboot.config.ConnectionSettings;
 import com.mrgan.springboot.thrift.Calculator;
@@ -44,19 +45,18 @@ import com.mrgan.springboot.thrift.CalculatorHandler;
  * @ComponentScan tells Spring to look for other components, configurations, and
  * services in the the hello package, allowing it to find the HelloController.
  */
-@EnableSwagger2
 // swagger2
-public class Application implements EmbeddedServletContainerCustomizer {
-	private static Logger logger = LogManager.getLogger(Application.class
-			.getName());
+public class Application extends WebMvcConfigurerAdapter implements EmbeddedServletContainerCustomizer {
+	private static Logger logger = LogManager.getLogger(Application.class.getName());
 
-	@Bean
-	public Docket api() {
-		return new Docket(DocumentationType.SWAGGER_2).select() // 选择那些路径和api会生成document
-				.apis(RequestHandlerSelectors.any()) // 对所有api进行监控
-				.paths(PathSelectors.any()) // 对所有路径进行监控
-				.build();
-	}
+	// @Bean
+	// public Docket api() {
+	// return new Docket(DocumentationType.SWAGGER_2).select() //
+	// 选择那些路径和api会生成document
+	// .apis(RequestHandlerSelectors.any()) // 对所有api进行监控
+	// .paths(PathSelectors.any()) // 对所有路径进行监控
+	// .build();
+	// }
 
 	@Bean
 	@ConfigurationProperties(prefix = "connection")
@@ -78,7 +78,8 @@ public class Application implements EmbeddedServletContainerCustomizer {
 			System.out.printf("Spring Boot 使用profile为:%s\n", profile);
 		}
 		logger.info("hahahahahahaha");
-		// System.out.println("Let's inspect the beans provided by Spring Boot:");
+		// System.out.println("Let's inspect the beans provided by Spring
+		// Boot:");
 		// String[] beanNames = ctx.getBeanDefinitionNames();
 		// Arrays.sort(beanNames);
 		// for (String beanName : beanNames) {
@@ -109,13 +110,33 @@ public class Application implements EmbeddedServletContainerCustomizer {
 			// new Args(serverTransport).processor(processor));
 
 			// Use this for a multithreaded server
-			TServer server = new TThreadPoolServer(new TThreadPoolServer.Args(
-					serverTransport).processor(processor));
+			TServer server = new TThreadPoolServer(new TThreadPoolServer.Args(serverTransport).processor(processor));
 
 			System.out.println("Starting the simple server...");
 			server.serve();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(new HandlerInterceptorAdapter() {
+			@Override
+			public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+					ModelAndView modelAndView) throws Exception {
+				// TODO Auto-generated method stub
+				System.out.println(request.getContextPath());
+				System.out.println("2interceptor====");
+				super.postHandle(request, response, handler, modelAndView);
+			}
+
+			@Override
+			public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+					throws Exception {
+				System.out.println(request.getContextPath());
+				System.out.println("interceptor====");
+				return false;
+			}
+		}).addPathPatterns("/pages/*");
 	}
 }

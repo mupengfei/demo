@@ -28,13 +28,13 @@ public class ConsumerGroupExample {
 		// 10.0.60.146:9092,10.0.60.147:9092,10.0.60.148:9092
 		// 10.0.60.146:2181,10.0.60.147:2181,10.0.60.148:2181
 		props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-				"192.168.222.110:9092,192.168.222.110:9093,192.168.222.110:9094");
-		props.put(ConsumerConfig.GROUP_ID_CONFIG, "1");
+				"testserver1:9092,testserver2:9092,testserver3:9092");
+		props.put(ConsumerConfig.GROUP_ID_CONFIG, "command_service1");
+//		props.put(ConsumerConfig.CLIENT_ID_CONFIG, this.hashCode() + "");
 		props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
-		props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-				StringDeserializer.class.getName());
-		props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-				StringDeserializer.class.getName());
+		props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "none");
+		props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+		props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
 		consumer = new KafkaConsumer(props);
 		// this.topic = a_topic;
 	}
@@ -46,12 +46,10 @@ public class ConsumerGroupExample {
 			executor.shutdown();
 		try {
 			if (!executor.awaitTermination(5000, TimeUnit.MILLISECONDS)) {
-				System.out
-						.println("Timed out waiting for consumer threads to shut down, exiting uncleanly");
+				System.out.println("Timed out waiting for consumer threads to shut down, exiting uncleanly");
 			}
 		} catch (InterruptedException e) {
-			System.out
-					.println("Interrupted during shutdown, exiting uncleanly");
+			System.out.println("Interrupted during shutdown, exiting uncleanly");
 		}
 	}
 
@@ -65,7 +63,7 @@ public class ConsumerGroupExample {
 		//
 		// executor = Executors.newFixedThreadPool(a_numThreads);
 		List<String> topics = new ArrayList<String>();
-		topics.add("kps");
+		topics.add("kkCommand");
 		consumer.subscribe(topics);
 		while (true) {
 			ConsumerRecords<String, String> record = consumer.poll(60000);

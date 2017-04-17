@@ -23,26 +23,37 @@ import com.mrgan.springboot.model.User;
 @RestController
 @RequestMapping("/rest")
 public class RestTestController {
-	private static Logger logger = LogManager.getLogger(RestTestController.class
-			.getName());
-	
+	private static Logger logger = LogManager.getLogger(RestTestController.class.getName());
+
 	@RequestMapping(value = { "/date/{date}" })
-	public Customer dateTest(
-			@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
+	public Customer dateTest(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
 		return new Customer("firstName", "lastName", date);
 	}
 
+	@RequestMapping(value = { "/zn" })
+	public String test(String param) {
+		// System.out.println(error.getErrorCount());
+		logger.info(param);
+		return ".啥都行";
+	}
+
+	@RequestMapping(value = { "/znNo" })
+	public String znNo(String param) {
+		// System.out.println(error.getErrorCount());
+		logger.info(param);
+		return "znNo";
+	}
+
 	@RequestMapping(value = { "/check" })
-	public String check(
-			@Valid @Min(value = 0, message = "num必须大于等于0") @RequestParam Integer num) {
+	public String check(@Valid @Min(value = 0, message = "num必须大于等于0") @RequestParam Integer num) {
 		// System.out.println(error.getErrorCount());
 		logger.info("Hello world 你好 hhh " + System.currentTimeMillis());
 		return num + "";
 	}
 
 	@RequestMapping(value = { "/binding" })
-	public String bindingTest(@Valid User user, BindingResult bindingResult,
-			@Valid Customer customer, BindingResult bindingResult2) {
+	public String bindingTest(@Valid User user, BindingResult bindingResult, @Valid Customer customer,
+			BindingResult bindingResult2) {
 		if (bindingResult.hasErrors()) {
 			System.out.println(bindingResult.getErrorCount());
 			return "error";
