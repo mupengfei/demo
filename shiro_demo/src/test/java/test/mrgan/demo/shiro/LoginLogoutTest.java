@@ -19,16 +19,34 @@ public class LoginLogoutTest {
 		SecurityUtils.setSecurityManager(securityManager);
 		// 3、得到Subject及创建用户名/密码身份验证Token（即用户身份/凭证）
 		Subject subject = SecurityUtils.getSubject();
-		UsernamePasswordToken token = new UsernamePasswordToken("zhang", "1123");
+		UsernamePasswordToken token = new UsernamePasswordToken("zhang", "123");
+		token.setRememberMe(true);
 
+		System.out.println(subject.isAuthenticated());
+		try {
+			// 4、登录，即身份验证
+			subject.login(token);
+			subject.getSession().setAttribute("hello", "world");
+		} catch (AuthenticationException e) {
+			// 5、身份验证失败
+		}
+
+		System.out.println(subject.isAuthenticated());
+		Assert.assertEquals(true, subject.isAuthenticated()); // 断言用户已经登录
+		System.out.println(subject.getSession().getAttribute("hello"));
+
+		// 6、退出
+		subject.logout();
+
+		System.out.println(subject.isAuthenticated());
 		try {
 			// 4、登录，即身份验证
 			subject.login(token);
 		} catch (AuthenticationException e) {
 			// 5、身份验证失败
 		}
-
-		Assert.assertEquals(true, subject.isAuthenticated()); // 断言用户已经登录
+		System.out.println(subject.getSession().getAttribute("hello"));
+		
 
 		// 6、退出
 		subject.logout();
