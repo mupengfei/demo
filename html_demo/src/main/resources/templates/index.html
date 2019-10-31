@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css"
+	href="../static/assets/css/bootstrap.min.css"
+	th:href="@{/assets/css/bootstrap.min.css}">
+<script src="../static/assets/js/jquery.min.js"
+	th:src="@{/assets/js/jquery.min.js}"></script>
+<script type="text/javascript"
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script type="text/javascript"
+	src="../static/assets/js/mp.mansory.min.js"
+	th:src="@{/assets/js/mp.mansory.min.js}"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/upyun/dist/upyun.min.js"></script>
+<style type="text/css">
+</style>
+</head>
+<body>
+	<div class="masonry">
+		<a class="box" href="#" onmouseenter="mousein(event, 1490909);"
+			onmouseleave="mouseleaver(event, 1490909);"> <img
+			src="../static/videos/1490909.jpg" th:src="@{/videos/1490909.jpg}"
+			height="253" width="480">
+		</a> <a class="box" href="#" onmouseenter="mousein(event, 1490904);"
+			onmouseleave="mouseleaver(event, 1490904);"> <img
+			src="../static/videos/1490904.jpg" th:src="@{/videos/1490904.jpg}"
+			height="253" width="480">
+		</a> <a class="box" href="#" onmouseenter="mousein(event, '480p');"
+			onmouseleave="mouseleaver(event, '480p');"> <img
+			src="../static/videos/480p.jpg" th:src="@{/videos/480p.jpg}"
+			height="253" width="480">
+		</a> <a class="box" href="#" onmouseenter="mousein(event, '480p');"
+			onmouseleave="mouseleaver(event, '480p');"> <img
+			src="../static/videos/480p.jpg" th:src="@{/videos/480p.jpg}"
+			height="253" width="480">
+		</a> <a class="box" href="#" onmouseenter="mousein(event, '480p');"
+			onmouseleave="mouseleaver(event, '480p');"> <img
+			src="../static/videos/480p.jpg" th:src="@{/videos/480p.jpg}"
+			height="253" width="480">
+		</a> <a class="box" href="#" onmouseenter="mousein(event, '480p');"
+			onmouseleave="mouseleaver(event, '480p');"> <img
+			src="../static/videos/480p.jpg" th:src="@{/videos/480p.jpg}"
+			height="253" width="480">
+		</a> <a class="box" href="#" onmouseenter="mousein(event, '480p');"
+			onmouseleave="mouseleaver(event, '480p');"> <img
+			src="../static/videos/480p.jpg" th:src="@{/videos/480p.jpg}"
+			height="253" width="480">
+		</a>
+	</div>
+	<br />
+	<br />
+	<script type="text/javascript">
+/**
+ *@param service: Service 实例
+ *@param method: 当前请求的 API 使用的方法
+ *@param path: 当前请求的资源路径
+ */
+function getSignHeader(service, method, path) {
+	 console.log(service);
+ }
+  // 请求自己的服务器，计算当前 api 请求签名信息
+  // 可以参考该项目 sample 目录中的示例代码
+
+  const service = new upyun.Service('streamd');
+  const client = new upyun.Client(service, getSignHeader);
+
+</script>
+	<script th:inline="JavaScript">
+		/*<![CDATA[*/
+		function mousein(event, id) {
+			videoPath = [[@{/videos/}]]
+			videoPath = videoPath + id + ".mp4";
+			tar = event.currentTarget;
+			children = tar.children;
+			if (children.length == 1)
+				tar.innerHTML = "<video style=\"position: absolute; display: bolck;object-fit:fill;\" loop autoplay src=\"" + videoPath + "\" height=\"253\" width=\"480\"></video>"
+						+ tar.innerHTML;
+		}
+		function mouseleaver(event, id) {
+			imgPath = [[@{/videos/}]]
+			imgPath = imgPath + id + ".jpg";
+			tar = event.currentTarget;
+			video = tar.getElementsByTagName("video")
+			parent = video[0].parentNode
+			parent.removeChild(video[0]);
+		}
+		jQuery(document).ready(function ( $ ) {
+			  $(".masonry").mpmansory(
+					  {
+					      childrenClass: '', // default is a div
+					      columnClasses: 'box', //add classes to items
+					      breakpoints:{
+					        lg: 4, 
+					        md: 6, 
+					        sm: 6,
+					        xs: 12
+					      },
+					      distributeBy: { order: false, height: false, attr: 'data-order', attrOrder: 'asc' }, 
+					      onload: function (items) {
+					    	  console.log("test");
+					        //make somthing with items
+					      } 
+					    });
+			});  
+		/*]]>*/
+	</script>
+</body>
+</html>

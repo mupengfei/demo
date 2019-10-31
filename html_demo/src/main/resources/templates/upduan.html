@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+<meta charset="UTF-8">
+<title>又拍云 - js sdk 使用示例</title>
+<script src="https://code.jquery.com/jquery.js"></script>
+</head>
+<body>
+	<input type="file" id="file" name="file">
+	<input type="submit" value="upload" onclick="upload()">
+	<script>
+		// client side only need bucket name
+		//var bucket = new upyun.Bucket('streamd')
+		//function getHeaderSign(bucket, method, path) {
+		//	return fetch('http://localhost:40001/demo/sign?' + params).then(
+		//			function(response) {
+		//				if (response.status !== 200) {
+		//					console.error('gen header sign faild!')
+		//					return;
+		//				}
+		//				return response.json()
+		//			})
+		//}
+		//var client = new upyun.Client(bucket, getHeaderSign)
+		function upload() {
+			var file = document.getElementById('file').files[0];
+			console.log(file.size);
+			var params = 'bucket=streamd&method=PUT&path=/upyun-temp/demo.mp4';
+			var response = $.ajax({
+				url : "http://localhost:40001/demo/sign?" + params,
+				data : {},
+				async : false,
+				type : 'GET'
+			}).responseText;
+			console.log(response);
+			$.ajax({
+				url : "http://v0.api.upyun.com/streamd/upyun-temp/demo.mp4",
+				headers : {
+					"origin" : "*"
+				},
+				data : {
+					"Content-Length" : 0,
+					"x-upyun-multi-stage" : "initiate",
+					"x-upyun-multi-length" : file.size
+				},
+				async : false,
+				type : 'PUT'
+			});
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.mrgan.demo</groupId>
+	<artifactId>xfyun_demo</artifactId>
+	<version>1.0</version>
+	<dependencies>
+		<dependency>
+			<groupId>com.iflytek</groupId>
+			<artifactId>Msc</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}\src\lib\Msc.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.iflytek</groupId>
+			<artifactId>json-jena</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}\src\lib\json-jena-1.0.jar</systemPath>
+		</dependency>
+	</dependencies>
+</project>

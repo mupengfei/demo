@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="assets/js/jquery.min.js"
+	th:src="@{/assets/js/jquery.min.js}"></script>
+</head>
+<body>
+	<a href="#" onmouseenter="mousein(event, 1490909);"
+		onmouseleave="mouseleaver(event, 1490909);"> <img
+		src="https://c.stocksy.com/a/vqF600/z8/1490909.jpg"
+		th:src="@{/videos/1490909.jpg}" height="253" width="480">
+	</a>
+	<br />
+	<a href="#" onmouseenter="mousein(event, 1490904);"
+		onmouseleave="mouseleaver(event, 1490904);"> <img
+		src="https://c.stocksy.com/a/vqF600/z8/1490904.jpg"
+		th:src="@{/videos/1490904.jpg}" height="253" width="480">
+	</a>
+	<br />
+	<a href="#" onmouseenter="mousein(event, '480p');"
+		onmouseleave="mouseleaver(event, '480p');"> <img
+		src="https://c.stocksy.com/a/vqF600/z8/480p.jpg"
+		th:src="@{/videos/480p.jpg}" height="253" width="480">
+	</a>
+
+	<script th:inline="JavaScript">
+		/*<![CDATA[*/
+		function mousein(event, id) {
+			videoPath = [[@{/videos/}]]
+			videoPath = videoPath + id + ".mp4";
+			tar = event.currentTarget;
+			children = tar.children;
+			if (children.length == 1)
+				tar.innerHTML = "<video style=\"position: absolute; display: bolck;object-fit:fill;\" loop autoplay src=\"" + videoPath + "\" height=\"253\" width=\"480\"></video>"
+						+ tar.innerHTML;
+		}
+		function mouseleaver(event, id) {
+			imgPath = [[@{/videos/}]]
+			imgPath = imgPath + id + ".jpg";
+			tar = event.currentTarget;
+			video = tar.getElementsByTagName("video")
+			parent = video[0].parentNode
+			parent.removeChild(video[0]);
+		}
+		/*]]>*/
+	</script>
+</body>
+</html>
