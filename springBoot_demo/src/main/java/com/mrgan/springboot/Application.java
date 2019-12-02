@@ -46,8 +46,10 @@ import com.mrgan.springboot.thrift.CalculatorHandler;
  * services in the the hello package, allowing it to find the HelloController.
  */
 // swagger2
-public class Application extends WebMvcConfigurerAdapter implements EmbeddedServletContainerCustomizer {
-	private static Logger logger = LogManager.getLogger(Application.class.getName());
+public class Application extends WebMvcConfigurerAdapter implements
+		EmbeddedServletContainerCustomizer {
+	private static Logger logger = LogManager.getLogger(Application.class
+			.getName());
 
 	// @Bean
 	// public Docket api() {
@@ -110,7 +112,8 @@ public class Application extends WebMvcConfigurerAdapter implements EmbeddedServ
 			// new Args(serverTransport).processor(processor));
 
 			// Use this for a multithreaded server
-			TServer server = new TThreadPoolServer(new TThreadPoolServer.Args(serverTransport).processor(processor));
+			TServer server = new TThreadPoolServer(new TThreadPoolServer.Args(
+					serverTransport).processor(processor));
 
 			System.out.println("Starting the simple server...");
 			server.serve();
@@ -122,7 +125,8 @@ public class Application extends WebMvcConfigurerAdapter implements EmbeddedServ
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(new HandlerInterceptorAdapter() {
 			@Override
-			public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+			public void postHandle(HttpServletRequest request,
+					HttpServletResponse response, Object handler,
 					ModelAndView modelAndView) throws Exception {
 				// TODO Auto-generated method stub
 				System.out.println(request.getContextPath());
@@ -131,7 +135,8 @@ public class Application extends WebMvcConfigurerAdapter implements EmbeddedServ
 			}
 
 			@Override
-			public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+			public boolean preHandle(HttpServletRequest request,
+					HttpServletResponse response, Object handler)
 					throws Exception {
 				System.out.println(request.getContextPath());
 				System.out.println("interceptor====");
